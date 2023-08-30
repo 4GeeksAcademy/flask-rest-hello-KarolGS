@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -9,7 +10,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
     def serialize(self):
         return {
@@ -30,6 +31,14 @@ class Favorite(db.Model):
     film_id = db.Column(db.Integer, db.ForeignKey('films.id'), nullable=True)
     film = db.relationship('Films', backref='favorited_by')
     
+    def __repr__(self):
+        return '<Favorite %r>' % self.id
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            # do not serialize the password, its a security breach
+        }
     
     
     
@@ -102,12 +111,12 @@ class Vehicle(db.Model):
     
     
     def __repr__(self):
-        return '<Planets %r>' % self.id
+        return '<Vehicles %r>' % self.id
 
     def serialize(self):
         return {
             "id": self.id,
-            "Model": self.Model,
+            "Modelo": self.Modelo,
             "Manufacturer": self.Manufacturer,
             "Cost_in_credits": self.Cost_in_credits,
             "Lenght": self.Lenght,
